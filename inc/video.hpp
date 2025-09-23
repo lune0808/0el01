@@ -37,6 +37,13 @@ public:
 		multimedia::display(os);
 		os << ": " << duration << "s video";
 	}
+	//! displays the underlying object using the appropriate program
+	void play() const override
+	{
+		using namespace std::string_literals;
+		std::string command = "mpv "s + get_path() + " &"s;
+		system(command.c_str());
+	}
 };
 
 

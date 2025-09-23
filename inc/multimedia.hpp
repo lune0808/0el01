@@ -21,7 +21,7 @@ public:
 	//! full constructor that subclasses should call
 	multimedia(std::string &&name, std::string &&path);
 	//! virtual destructor necessary because multimedia is polymorphic
-	virtual ~multimedia() = 0;
+	virtual ~multimedia();
 
 	//! getter for name
 	std::string const &get_name() const;
@@ -34,6 +34,8 @@ public:
 
 	//! displays the underlying object as text
 	virtual void display(std::ostream &os) const;
+	//! displays the underlying object using the appropriate program
+	virtual void play() const = 0;
 };
 
 

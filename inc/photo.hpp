@@ -44,5 +44,12 @@ public:
 		multimedia::display(os);
 		os << ": " << width << "x" << height << " photo";
 	}
+	//! displays the underlying object using the appropriate program
+	void play() const override
+	{
+		using namespace std::string_literals;
+		std::string command = "imagej "s + get_path() + " &"s;
+		system(command.c_str());
+	}
 };
 
