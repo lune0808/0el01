@@ -22,6 +22,8 @@ public:
 	movie() : nchapters(0), chapters(nullptr) {}
 	//! full constructor computing the correct video duration for a movie
 	movie(std::string &&name, std::string &&path, chapters_t chapters);
+	//! copy constructor
+	movie(movie const &other);
 	//! destructor for movie
 	~movie();
 

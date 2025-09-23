@@ -27,6 +27,17 @@ movie::movie(std::string &&name, std::string &&path, chapters_t chapters) :
 {
 }
 
+movie::movie(movie const &other) :
+	video(
+		std::string(other.get_name()),
+		std::string(other.get_path()),
+		other.get_duration()
+	),
+	nchapters(other.nchapters),
+	chapters(dupe(other.get_chapters()))
+{
+}
+
 movie::~movie()
 {
 	delete[] chapters;

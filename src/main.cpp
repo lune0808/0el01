@@ -40,10 +40,15 @@ void test_array_access()
 
 void test_film()
 {
-	multimedia *m = new movie("star wars", "star_wars_movie_remastered_4k.mkv", {{1203, 2301, 1491, 1002, 801, 1010, 300}});
-	m->display(std::cout);
+	auto *m = new movie("star wars", "star_wars_movie_remastered_4k.mkv", {{1203, 2301, 1491, 1002, 801, 1010, 300}});
+	multimedia *pm = m;
+	pm->display(std::cout);
 	std::cout << '\n';
-	delete m;
+	multimedia *copy = new movie(*m);
+	delete pm;
+	copy->display(std::cout);
+	std::cout << '\n';
+	delete copy;
 }
 
 int main()
