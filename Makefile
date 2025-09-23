@@ -4,7 +4,7 @@ LIBS =
 SAN =
 CPPFLAGS = -MMD -MP -Ibin -Iinc $(SAN)
 CFLAGS = $(SAN)
-CXXFLAGS = -std=c++17 -ggdb3 $(SAN)
+CXXFLAGS = -std=c++20 -ggdb3 $(SAN)
 LDFLAGS = $(SAN)
 
 CC = gcc

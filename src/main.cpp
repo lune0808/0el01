@@ -3,6 +3,7 @@
 #include "multimedia.hpp"
 #include "photo.hpp"
 #include "video.hpp"
+#include "movie.hpp"
 
 void test_base_inst()
 {
@@ -17,6 +18,7 @@ void test_array_access()
 	// in C++ we make the array have pointer-to-base elements
 	// in Java we just make an array of the base class, since internally Java already
 	// uses pointers to represent all objects
+	using namespace std::string_literals;
 	multimedia *arr[6];
 	std::string names = "123456";
 	std::string paths = "abcdef";
@@ -36,10 +38,18 @@ void test_array_access()
 	}
 }
 
+void test_film()
+{
+	multimedia *m = new movie("star wars", "star_wars_movie_remastered_4k.mkv", {{1203, 2301, 1491, 1002, 801, 1010, 300}});
+	m->display(std::cout);
+	std::cout << '\n';
+	delete m;
+}
+
 int main()
 {
-	using namespace std::string_literals;
 	test_base_inst();
 	test_array_access();
+	test_film();
 }
 
