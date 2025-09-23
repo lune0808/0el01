@@ -56,14 +56,14 @@ void test_film()
 
 void test_group()
 {
-	multimedia *p1 = new photo("pig"s, "pig.jpg"s, 1280, 720);
-	multimedia *v1 = new video("nyan cat"s, "nyan_cat.mp4"s, 180);
-	multimedia *p2 = new photo("burger"s, "beesechurger.png"s, 1920, 1080);
-	multimedia *m1 = new movie("rango", "rango_movie_blabla.mkv"s, {{600, 700, 550, 810, 300, 920, 470}});
-	multimedia *v2 = new video("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
-	multimedia *v3 = new video("idk"s, "sbdhajdkasds.mp4", 2199);
+	std::shared_ptr<multimedia> p1 = std::make_shared<photo>("pig"s, "pig.jpg"s, 1280, 720);
+	std::shared_ptr<multimedia> v1 = std::make_shared<video>("nyan cat"s, "nyan_cat.mp4"s, 180);
+	std::shared_ptr<multimedia> p2 = std::make_shared<photo>("burger"s, "beesechurger.png"s, 1920, 1080);
+	std::shared_ptr<multimedia> m1 = std::make_shared<movie>("rango", "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
+	std::shared_ptr<multimedia> v2 = std::make_shared<video>("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
+	std::shared_ptr<multimedia> v3 = std::make_shared<video>("idk"s, "sbdhajdkasds.mp4", 2199);
 
-	multimedia *arr[] = { p1, v1, p2, m1, v2, v3 };
+	std::shared_ptr<multimedia> arr[] = { p1, v1, p2, m1, v2, v3 };
 	std::cout << '\n';
 	for (const auto elem : arr) {
 		elem->display(std::cout);
@@ -75,14 +75,6 @@ void test_group()
 		group g( "MyMovies"s, v2, m1, v1, v3 );
 		g.display(std::cout);
 		std::cout << "\n\n";
-	}
-
-	for (const auto elem : arr) {
-		elem->display(std::cout);
-		std::cout << '\n';
-	}
-	for (auto elem : arr) {
-		delete elem;
 	}
 }
 

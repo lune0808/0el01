@@ -1,17 +1,18 @@
 #pragma once
 
 #include <list>
+#include <memory>
 #include "multimedia.hpp"
 
 
-class group : public std::list<multimedia*>
+class group : public std::list<std::shared_ptr<multimedia>>
 {
 	std::string name;
 
 public:
 	template <typename ...Args>
 	group(std::string &&name, Args&& ...args) :
-		std::list<multimedia*>{ std::forward<Args>(args)... },
+		std::list<std::shared_ptr<multimedia>>{ std::forward<Args>(args)... },
 		name(std::move(name))
 	{
 	}
