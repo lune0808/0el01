@@ -1,19 +1,20 @@
 #include <iostream>
 #include <string>
 #include "multimedia.hpp"
+#include "photo.hpp"
+#include "video.hpp"
 
 int main()
 {
 	using namespace std::string_literals;
-	multimedia example("example"s, "path/to/example.type"s);
-	example.display(std::cout);
+	multimedia *p1 = new photo("photo1"s, "photo/path/1"s, 1920, 1080);
+	multimedia *v1 = new video("video1"s, "video/path/1"s, 123);
+	p1->set_path("photo/path/1.1"s);
+	p1->display(std::cout);
 	std::cout << '\n';
-	multimedia *ex1 = new multimedia("ex1"s, "path1"s);
-	multimedia *ex2 = new multimedia("ex2"s, "path2"s);
-	ex1->set_path("path1.1"s);
-	ex2->display(std::cout);
+	v1->display(std::cout);
 	std::cout << '\n';
-	ex1->display(std::cout);
-	std::cout << '\n';
+	delete p1;
+	delete v1;
 }
 

@@ -7,6 +7,10 @@ multimedia::multimedia(std::string &&name, std::string &&path)
 {
 }
 
+multimedia::~multimedia()
+{
+}
+
 std::string const &multimedia::get_name() const
 {
 	return name;
