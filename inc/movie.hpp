@@ -23,7 +23,7 @@ public:
 	//! full constructor computing the correct video duration for a movie
 	movie(std::string &&name, std::string &&path, chapters_t chapters);
 	//! destructor for movie
-	~movie() = default;
+	~movie();
 
 	/*!
 	  getter for chapters

@@ -27,6 +27,11 @@ movie::movie(std::string &&name, std::string &&path, chapters_t chapters) :
 {
 }
 
+movie::~movie()
+{
+	delete[] chapters;
+}
+
 chapters_t movie::get_chapters() const
 {
 	return { chapters, nchapters };
