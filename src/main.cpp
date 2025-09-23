@@ -56,14 +56,14 @@ void test_film()
 
 void test_group()
 {
-	std::shared_ptr<multimedia> p1 = std::make_shared<photo>("pig"s, "pig.jpg"s, 1280, 720);
-	std::shared_ptr<multimedia> v1 = std::make_shared<video>("nyan cat"s, "nyan_cat.mp4"s, 180);
-	std::shared_ptr<multimedia> p2 = std::make_shared<photo>("burger"s, "beesechurger.png"s, 1920, 1080);
-	std::shared_ptr<multimedia> m1 = std::make_shared<movie>("rango", "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
-	std::shared_ptr<multimedia> v2 = std::make_shared<video>("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
-	std::shared_ptr<multimedia> v3 = std::make_shared<video>("idk"s, "sbdhajdkasds.mp4", 2199);
+	managed_t p1 = make_managed<photo>("pig"s, "pig.jpg"s, 1280, 720);
+	managed_t v1 = make_managed<video>("nyan cat"s, "nyan_cat.mp4"s, 180);
+	managed_t p2 = make_managed<photo>("burger"s, "beesechurger.png"s, 1920, 1080);
+	managed_t m1 = make_managed<movie>("rango", "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
+	managed_t v2 = make_managed<video>("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
+	managed_t v3 = make_managed<video>("idk"s, "sbdhajdkasds.mp4", 2199);
 
-	std::shared_ptr<multimedia> arr[] = { p1, v1, p2, m1, v2, v3 };
+	managed_t arr[] = { p1, v1, p2, m1, v2, v3 };
 	std::cout << '\n';
 	for (const auto elem : arr) {
 		elem->display(std::cout);
