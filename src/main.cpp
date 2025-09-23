@@ -4,12 +4,19 @@
 #include "photo.hpp"
 #include "video.hpp"
 
-int main()
+void test_base_inst()
 {
-	using namespace std::string_literals;
 	// cannot make instances of the base class anymore
 	// because it has pure virtual methods
 	// multimedia m;
+}
+
+void test_array_access()
+{
+	// type-erasure allows to access different types through a pointer to a common type
+	// in C++ we make the array have pointer-to-base elements
+	// in Java we just make an array of the base class, since internally Java already
+	// uses pointers to represent all objects
 	multimedia *arr[6];
 	std::string names = "123456";
 	std::string paths = "abcdef";
@@ -27,5 +34,12 @@ int main()
 	for (auto mm : arr) {
 		delete mm;
 	}
+}
+
+int main()
+{
+	using namespace std::string_literals;
+	test_base_inst();
+	test_array_access();
 }
 
