@@ -4,6 +4,10 @@
 #include "photo.hpp"
 #include "video.hpp"
 #include "movie.hpp"
+#include "group.hpp"
+
+
+using namespace std::string_literals;
 
 void test_base_inst()
 {
@@ -18,7 +22,6 @@ void test_array_access()
 	// in C++ we make the array have pointer-to-base elements
 	// in Java we just make an array of the base class, since internally Java already
 	// uses pointers to represent all objects
-	using namespace std::string_literals;
 	multimedia *arr[6];
 	std::string names = "123456";
 	std::string paths = "abcdef";
@@ -40,7 +43,7 @@ void test_array_access()
 
 void test_film()
 {
-	auto *m = new movie("star wars", "star_wars_movie_remastered_4k.mkv", {{1203, 2301, 1491, 1002, 801, 1010, 300}});
+	auto *m = new movie("star wars"s, "star_wars_movie_remastered_4k.mkv"s, {{1203, 2301, 1491, 1002, 801, 1010, 300}});
 	multimedia *pm = m;
 	pm->display(std::cout);
 	std::cout << '\n';
@@ -51,10 +54,43 @@ void test_film()
 	delete copy;
 }
 
+void test_group()
+{
+	multimedia *p1 = new photo("pig"s, "pig.jpg"s, 1280, 720);
+	multimedia *v1 = new video("nyan cat"s, "nyan_cat.mp4"s, 180);
+	multimedia *p2 = new photo("burger"s, "beesechurger.png"s, 1920, 1080);
+	multimedia *m1 = new movie("rango", "rango_movie_blabla.mkv"s, {{600, 700, 550, 810, 300, 920, 470}});
+	multimedia *v2 = new video("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
+	multimedia *v3 = new video("idk"s, "sbdhajdkasds.mp4", 2199);
+
+	multimedia *arr[] = { p1, v1, p2, m1, v2, v3 };
+	std::cout << '\n';
+	for (const auto elem : arr) {
+		elem->display(std::cout);
+		std::cout << '\n';
+	}
+	std::cout << '\n';
+
+	{
+		group g( "MyMovies"s, v2, m1, v1, v3 );
+		g.display(std::cout);
+		std::cout << "\n\n";
+	}
+
+	for (const auto elem : arr) {
+		elem->display(std::cout);
+		std::cout << '\n';
+	}
+	for (auto elem : arr) {
+		delete elem;
+	}
+}
+
 int main()
 {
 	test_base_inst();
 	test_array_access();
 	test_film();
+	test_group();
 }
 
