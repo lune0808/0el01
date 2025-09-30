@@ -5,6 +5,7 @@
 #include "video.hpp"
 #include "movie.hpp"
 #include "group.hpp"
+#include "all_media.hpp"
 
 
 using namespace std::string_literals;
@@ -59,7 +60,7 @@ void test_group()
 	managed_t p1 = make_managed<photo>("pig"s, "pig.jpg"s, 1280, 720);
 	managed_t v1 = make_managed<video>("nyan cat"s, "nyan_cat.mp4"s, 180);
 	managed_t p2 = make_managed<photo>("burger"s, "beesechurger.png"s, 1920, 1080);
-	managed_t m1 = make_managed<movie>("rango", "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
+	managed_t m1 = make_managed<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
 	managed_t v2 = make_managed<video>("conference"s, "abcd_conference_recording_25041996.mp4"s, 5492);
 	managed_t v3 = make_managed<video>("idk"s, "sbdhajdkasds.mp4", 2199);
 
@@ -78,11 +79,24 @@ void test_group()
 	}
 }
 
+void test_all_media()
+{
+	all_media media;
+	media.create_media<photo>("pig"s, "pig.jpg"s, 1280, 720);
+	media.create_media<video>("nyan cat"s, "nyan_cat.mp4"s, 180);
+	media.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600, 700, 550, 810, 300, 920, 470}});
+	media.create_group("MyMovies"s, "rango"s, "nyan cat"s);
+	media.display("nyan cat"s, std::cout);
+	media.display("nyyan cat"s, std::cout);
+	media.play("rango"s);
+}
+
 int main()
 {
 	test_base_inst();
 	test_array_access();
 	test_film();
 	test_group();
+	test_all_media();
 }
 

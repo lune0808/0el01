@@ -1,23 +1,8 @@
 #pragma once
 
 #include <list>
-#include <memory>
 #include "multimedia.hpp"
 
-
-/**
-  any multimedia object with automatic memory management
- */
-using managed_t = std::shared_ptr<multimedia>;
-
-/**
-  factory function for managed multimedia objects
- */
-template <typename T, typename ...Args>
-static inline managed_t make_managed(Args&& ...args)
-{
-	return std::make_shared<T>(std::forward<Args>(args)...);
-}
 
 /**
   \brief a group of multimedia objects
