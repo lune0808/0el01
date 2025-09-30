@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <map>
 #include <string>
 #include <utility>
@@ -56,7 +55,7 @@ public:
 	}
 
 	//! finds a media object from its name, returns nullptr if the object is not found
-	managed_t find(std::string const &name)
+	managed_t find_media(std::string const &name)
 	{
 		auto position = media.find(name);
 		if (position != media.end()) {
@@ -66,11 +65,23 @@ public:
 		}
 	}
 
-	//! prints a human-readable representation of the media called 'name' or an error if absent
+	//! finds a group object from its name, returns nullptr if the object is not found
+	group *find_group(std::string const &name)
+	{
+		auto position = groups.find(name);
+		if (position != groups.end()) {
+			return &position->second;
+		} else {
+			return nullptr;
+		}
+	}
+
+	//! prints a human-readable representation of the media/group called 'name' or an error if absent
 	void display(std::string const &name, std::ostream &os)
 	{
-		auto obj = find(name);
-		if (obj) {
+		if (auto obj = find_media(name); obj) {
+			obj->display(os);
+		} else if (auto obj = find_group(name); obj) {
 			obj->display(os);
 		} else {
 			os << "(\"" << name << "\" not found)";
@@ -80,9 +91,26 @@ public:
 	//! plays the media object called 'name' and returns `true` if it exists else `false`
 	bool play(std::string const &name)
 	{
-		auto obj = find(name);
+		auto obj = find_media(name);
 		if (obj) {
 			obj->play();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	//! removes a media or group and updates its references
+	bool remove(std::string const &name)
+	{
+		if (auto position = media.find(name); position != media.end()) {
+			media.erase(position);
+			for (auto &[_, gp] : groups) {
+				gp.remove(position->second);
+			}
+			return true;
+		} else if (auto position = groups.find(name); position != groups.end()) {
+			groups.erase(position);
 			return true;
 		} else {
 			return false;

@@ -102,6 +102,20 @@ void test_all_media()
 	std::cout << "\n";
 }
 
+void test_remove()
+{
+	all_media media;
+	media.create_media<photo>("pig"s, "pig.jpg"s, 1280lu, 720lu);
+	media.create_media<video>("nyan cat"s, "nyan_cat.mp4"s, 180lu);
+	media.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600lu, 700lu, 550lu, 810lu, 300lu, 920lu, 470lu}});
+	media.create_group("MyMovies"s, "rango"s, "nyan cat"s);
+	media.display("MyMovies"s, std::cout);
+	std::cout << "\n";
+	media.remove("nyan cat"s);
+	media.display("MyMovies"s, std::cout);
+	std::cout << "\n";
+}
+
 int main()
 {
 	test_base_inst();
@@ -109,5 +123,6 @@ int main()
 	test_film();
 	test_group();
 	test_all_media();
+	test_remove();
 }
 
