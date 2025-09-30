@@ -17,15 +17,16 @@ class photo : public multimedia
 	size_t width; //!< width of the image
 	size_t height; //!< height of the image
 
-public:
-	//! default constructor
-	photo() : width(0), height(0) {}
+protected:
+	friend class all_media;
 	//! full constructor giving a complete description of a photograph
 	photo(std::string &&name, std::string &&path, size_t width, size_t height) :
 		multimedia(std::move(name), std::move(path)),
 		width(width),
 		height(height)
 	{}
+
+public:
 	//! destructor for photo
 	~photo() = default;
 

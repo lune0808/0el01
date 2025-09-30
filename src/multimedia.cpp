@@ -10,7 +10,6 @@ multimedia::multimedia(std::string &&name, std::string &&path)
 
 multimedia::~multimedia()
 {
-	std::cout << "~multimedia()\n";
 }
 
 std::string const &multimedia::get_name() const

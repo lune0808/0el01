@@ -18,10 +18,12 @@ class movie : public video
 public:
 	using chapters_t = std::span<const size_t>; //!< represents a buffer of chapters for message passing
 
-	//! default constructor
-	movie() : nchapters(0), chapters(nullptr) {}
+protected:
+	friend class all_media;
 	//! full constructor computing the correct video duration for a movie
 	movie(std::string &&name, std::string &&path, chapters_t chapters);
+
+public:
 	//! copy constructor
 	movie(movie const &other);
 	//! destructor for movie

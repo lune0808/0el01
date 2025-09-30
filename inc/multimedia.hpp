@@ -17,8 +17,6 @@ class multimedia
 	std::string path; //!< system path of the underlying file
 
 public:
-	//! default constructor
-	multimedia() = default;
 	//! full constructor that subclasses should call
 	multimedia(std::string &&name, std::string &&path);
 	//! virtual destructor necessary because multimedia is polymorphic
@@ -43,13 +41,4 @@ public:
   any multimedia object with automatic memory management
  */
 using managed_t = std::shared_ptr<multimedia>;
-
-/**
-  factory function for managed multimedia objects
- */
-template <typename T, typename ...Args>
-static inline managed_t make_managed(Args&& ...args)
-{
-	return std::make_shared<T>(std::forward<Args>(args)...);
-}
 

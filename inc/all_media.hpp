@@ -26,7 +26,7 @@ public:
 		auto [position, inserted] = media.try_emplace(name, nullptr);
 		if (inserted) {
 			position->second =
-				make_managed<T>(std::move(name), std::forward<Args>(args)...);
+				std::shared_ptr<T>(new T{std::move(name), std::forward<Args>(args)...});
 			return position->second;
 		} else {
 			return nullptr;
@@ -35,13 +35,14 @@ public:
 
 	//! creates a new managed group based on the name of its elements
 	template <typename ...Args>
-	group *create_group(std::string &&name, Args&& ...args)
+		requires (std::constructible_from<std::string, Args> && ... && true)
+	group *create_group(std::string &&name, Args&& ...elements)
 	{
 		auto key(name);
 		auto [position, inserted] =
 			groups.try_emplace(std::move(key), std::move(name));
 		if (inserted) {
-			std::string names[] = { args... };
+			std::string names[] = { elements... };
 			for (auto &&name : names) {
 				auto obj = media.find(std::move(name));
 				if (obj != media.end()) {

@@ -16,13 +16,14 @@ class video : public multimedia
 {
 	size_t duration; //!< duration of the video in seconds
 
-public:
-	//! default constructor
-	video() : duration(0) {}
+protected:
+	friend class all_media;
 	//! full constructor giving a complete description of a video
 	video(std::string &&name, std::string &&path, size_t duration) :
 		multimedia(std::move(name), std::move(path)),
 		duration(duration) {}
+
+public:
 	//! description for video
 	~video() = default;
 
