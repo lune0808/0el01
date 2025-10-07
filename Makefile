@@ -35,8 +35,8 @@ bin/%.c.o: src/%.c
 bin/%.cpp.o: src/%.cpp
 	$(CXX) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS)
 
-run:: all
-	$(BIN)
+run-%:: all
+	$(@:run-%=bin/%)
 
 clean::
 	$(RM) -rf bin
