@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <map>
 #include "tcpserver.h"
 #include "photo.hpp"
 #include "video.hpp"
@@ -22,62 +23,96 @@ static all_media database;
 
 using namespace std::string_literals;
 
-bool server_main(std::string const &request, std::string &response)
+static std::string cmd_find(std::istream &is)
 {
-	const auto len = request.length();
+	std::stringstream output;
+	std::string name;
+	is >> name;
+	database.display(name, output);
+	return output.str();
+}
+
+static std::string cmd_play(std::istream &is)
+{
+	std::string name;
+	is >> name;
+	const auto ok = database.play(name);
+	return ok ? "Y"s : "N"s;
+}
+
+static std::string cmd_prefixed(std::istream &is)
+{
+	std::stringstream output;
+	std::string pattern;
+	is >> pattern;
+	for (auto &&name : database.prefixed(pattern)) {
+		output << name << ' ';
+	}
+	return output.str();
+}
+
+static std::string cmd_type(std::istream &is)
+{
+	std::stringstream output;
+	std::string type;
+	is >> type;
+	std::vector<std::string> names;
+	if (type.length() != 0) switch (type[0]) {
+	case 'P':
+		names = database.type<photo>();
+		break;
+	case 'V':
+		names = database.type<video>();
+		break;
+	case 'M':
+		names = database.type<movie>();
+		break;
+	case 'G':
+		names = database.type<group>();
+		break;
+	default:
+		break;
+	}
+	for (auto &&name : names) {
+		output << name << ' ';
+	}
+	return output.str();
+}
+
+static std::string cmd_all(std::istream &)
+{
+	std::stringstream output;
+	for (auto&& name : database.all()) {
+		output << name << ' ';
+	}
+	return output.str();
+}
+
+static std::string cmd_remove(std::istream &is)
+{
+	std::string name;
+	is >> name;
+	const auto ok = database.remove(name);
+	return ok ? "Y"s : "N"s;
+}
+
+static bool server_main(std::string const &request, std::string &response)
+{
+	using command_t = std::string(*)(std::istream&);
+	const std::map<std::string, command_t> execute{
+		{ "find"s, cmd_find },
+		{ "play"s, cmd_play },
+		{ "prefixed"s, cmd_prefixed },
+		{ "type"s, cmd_type },
+		{ "all"s, cmd_all },
+		{ "remove"s, cmd_remove },
+	};
 	std::stringstream input(request);
-	std::string arg;
-	input >> arg;
-	if (arg == "find"s) {
-		std::stringstream output;
-		input >> arg;
-		database.display(arg, output);
-		response = output.str();
-	} else if (arg == "play"s) {
-		input >> arg;
-		const auto found = database.play(arg);
-		response = (found? "Y": "N");
-	} else if (arg == "prefixed"s) {
-		std::stringstream output;
-		input >> arg;
-		for (auto&& name : database.prefixed(arg)) {
-			output << name << ' ';
-		}
-		response = output.str();
-	} else if (arg == "type"s) {
-		std::stringstream output;
-		input >> arg;
-		std::vector<std::string> names;
-		if (arg.length() != 0) switch (arg[0]) {
-		case 'P':
-			names = database.type<photo>();
-			break;
-		case 'V':
-			names = database.type<video>();
-			break;
-		case 'M':
-			names = database.type<movie>();
-			break;
-		case 'G':
-			names = database.type<group>();
-			break;
-		default:
-			break;
-		}
-		for (auto &&name : names) {
-			output << name << ' ';
-		}
-		response = output.str();
-	} else if (arg == "all"s) {
-		std::stringstream output;
-		for (auto&& name : database.all()) {
-			output << name << ' ';
-		}
-		response = output.str();
-	} else if (arg == "remove"s) {
-		input >> arg;
-		const auto removed = database.remove(arg);
-		response = (removed? "Y": "N");
+	std::string command;
+	input >> command;
+	const auto it = execute.find(command);
+	if (it != execute.end()) {
+		response = it->second(input);
 	} else {
 		response = "<unknown command>";
 	}
