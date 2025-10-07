@@ -17,3 +17,7 @@ finding objects of a specific type:
 	request: type initial-letter (P photo V video M movie G group)
 	response: name1 name2 ... nameN (possibly N=0)
 
+getting a list of all objects in the database:
+	request: all
+	response: name1 name2 ... nameN (possibly N=0)
+

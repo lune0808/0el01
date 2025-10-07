@@ -148,5 +148,17 @@ public:
 		}
 		return result;
 	}
+
+	std::vector<std::string> all() const
+	{
+		std::vector<std::string> result;
+		for (const auto &[name, _] : media) {
+			result.push_back(name);
+		}
+		for (const auto &[name, _] : groups) {
+			result.push_back(name);
+		}
+		return result;
+	}
 };
 

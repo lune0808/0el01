@@ -68,6 +68,12 @@ bool server_main(std::string const &request, std::string &response)
 			output << name << ' ';
 		}
 		response = output.str();
+	} else if (arg == "all"s) {
+		std::stringstream output;
+		for (auto&& name : database.all()) {
+			output << name << ' ';
+		}
+		response = output.str();
 	} else {
 		response = "<unknown command>";
 	}
