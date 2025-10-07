@@ -20,16 +20,22 @@ const int PORT = 3331;
 
 static all_media database;
 
+using namespace std::string_literals;
+
 bool server_main(std::string const &request, std::string &response)
 {
 	const auto len = request.length();
-	const auto name = request.substr(5, len-5);
-	if (request.starts_with("find ")) {
+	std::stringstream input(request);
+	std::string arg;
+	input >> arg;
+	if (arg == "find"s) {
 		std::stringstream output;
-		database.display(name, output);
+		input >> arg;
+		database.display(arg, output);
 		response = output.str();
-	} else if (request.starts_with("play ")) {
-		const auto found = database.play(name);
+	} else if (arg == "play"s) {
+		input >> arg;
+		const auto found = database.play(arg);
 		response = (found? "Y": "N");
 	} else {
 		response = "<unknown command>";
@@ -39,9 +45,8 @@ bool server_main(std::string const &request, std::string &response)
 
 int main(int argc, char* argv[])
 {
-	using namespace std::string_literals;
 	database.create_media<photo>("pig"s, "pig.jpg"s, 1280lu, 720lu);
-	database.create_media<video>("nyan cat"s, "nyan_cat.mp4"s, 180lu);
+	database.create_media<video>("nyan_cat"s, "nyan_cat.mp4"s, 180lu);
 	database.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600lu, 700lu, 550lu, 810lu, 300lu, 920lu, 470lu}});
 
 	std::cout << "Starting Server on port " << PORT << std::endl;

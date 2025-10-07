@@ -1,3 +1,6 @@
+name:
+	\i+ (no spaces)
+
 finding media/group:
 	request: find name
 	response: output of display(name, ...)
