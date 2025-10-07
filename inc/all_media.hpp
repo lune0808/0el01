@@ -119,7 +119,7 @@ public:
 	}
 
 	//! finds all media/groups whose name matches `prefix`
-	std::vector<std::string> prefixed(std::string const &prefix)
+	std::vector<std::string> prefixed(std::string const &prefix) const
 	{
 		std::vector<std::string> result;
 		for (const auto &[name, _] : media) {
@@ -131,6 +131,20 @@ public:
 			if (name.starts_with(prefix)) {
 				result.push_back(name);
 			}
+		}
+		return result;
+	}
+
+	//! returns all objects matching the requested type
+	template <typename T> std::vector<std::string> type() const
+	{
+		std::vector<std::string> result;
+		if constexpr (!std::is_same_v<T, group>) for (const auto &[name, obj] : media) {
+			if (dynamic_cast<T*>(obj.get())) {
+				result.push_back(name);
+			}
+		} else for (const auto &[name, _] : groups) {
+			result.push_back(name);
 		}
 		return result;
 	}

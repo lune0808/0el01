@@ -44,6 +44,30 @@ bool server_main(std::string const &request, std::string &response)
 			output << name << ' ';
 		}
 		response = output.str();
+	} else if (arg == "type"s) {
+		std::stringstream output;
+		input >> arg;
+		std::vector<std::string> names;
+		if (arg.length() != 0) switch (arg[0]) {
+		case 'P':
+			names = database.type<photo>();
+			break;
+		case 'V':
+			names = database.type<video>();
+			break;
+		case 'M':
+			names = database.type<movie>();
+			break;
+		case 'G':
+			names = database.type<group>();
+			break;
+		default:
+			break;
+		}
+		for (auto &&name : names) {
+			output << name << ' ';
+		}
+		response = output.str();
 	} else {
 		response = "<unknown command>";
 	}
@@ -56,6 +80,7 @@ int main(int argc, char* argv[])
 	database.create_media<video>("nyan_cat"s, "nyan_cat.mp4"s, 180lu);
 	database.create_media<video>("nyan_cat2"s, "nyan_cat.mp4"s, 180lu);
 	database.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600lu, 700lu, 550lu, 810lu, 300lu, 920lu, 470lu}});
+	database.create_group("MyMovies"s, "rango"s, "nyan cat"s);
 
 	std::cout << "Starting Server on port " << PORT << std::endl;
 	TCPServer sv(server_main);
