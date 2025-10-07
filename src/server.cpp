@@ -37,6 +37,13 @@ bool server_main(std::string const &request, std::string &response)
 		input >> arg;
 		const auto found = database.play(arg);
 		response = (found? "Y": "N");
+	} else if (arg == "prefixed"s) {
+		std::stringstream output;
+		input >> arg;
+		for (auto&& name : database.prefixed(arg)) {
+			output << name << ' ';
+		}
+		response = output.str();
 	} else {
 		response = "<unknown command>";
 	}
@@ -47,6 +54,7 @@ int main(int argc, char* argv[])
 {
 	database.create_media<photo>("pig"s, "pig.jpg"s, 1280lu, 720lu);
 	database.create_media<video>("nyan_cat"s, "nyan_cat.mp4"s, 180lu);
+	database.create_media<video>("nyan_cat2"s, "nyan_cat.mp4"s, 180lu);
 	database.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600lu, 700lu, 550lu, 810lu, 300lu, 920lu, 470lu}});
 
 	std::cout << "Starting Server on port " << PORT << std::endl;

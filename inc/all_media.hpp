@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <type_traits>
+#include <vector>
 #include "multimedia.hpp"
 #include "group.hpp"
 
@@ -115,6 +116,23 @@ public:
 		} else {
 			return false;
 		}
+	}
+
+	//! finds all media/groups whose name matches `prefix`
+	std::vector<std::string> prefixed(std::string const &prefix)
+	{
+		std::vector<std::string> result;
+		for (const auto &[name, _] : media) {
+			if (name.starts_with(prefix)) {
+				result.push_back(name);
+			}
+		}
+		for (const auto &[name, _] : groups) {
+			if (name.starts_with(prefix)) {
+				result.push_back(name);
+			}
+		}
+		return result;
 	}
 };
 
