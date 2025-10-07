@@ -21,3 +21,7 @@ getting a list of all objects in the database:
 	request: all
 	response: name1 name2 ... nameN (possibly N=0)
 
+removing an object/group:
+	request: remove name
+	response: "Y" if removed, "N" if not
+

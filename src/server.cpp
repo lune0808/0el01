@@ -74,6 +74,10 @@ bool server_main(std::string const &request, std::string &response)
 			output << name << ' ';
 		}
 		response = output.str();
+	} else if (arg == "remove"s) {
+		input >> arg;
+		const auto removed = database.remove(arg);
+		response = (removed? "Y": "N");
 	} else {
 		response = "<unknown command>";
 	}
