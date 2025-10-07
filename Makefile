@@ -1,36 +1,39 @@
 DIR = $(shell find inc -type d)
 BINDIR = $(DIR:inc%=bin%)
-LIBS =
+LIBS = pthread
 SAN =
 CPPFLAGS = -MMD -MP -Ibin -Iinc $(SAN)
 CFLAGS = $(SAN)
 CXXFLAGS = -std=c++20 -ggdb3 $(SAN)
-LDFLAGS = $(SAN)
+LDFLAGS = $(SAN) $(addprefix -L,$(LIBS))
 
 CC = gcc
 CXX = g++
 LD = g++
 RM = rm
 
-BIN = ./bin/main
+BIN = main client server
+BIN_PATH = $(BIN:%=bin/%)
 
 HDR = $(shell find inc -type f)
 
 SRC = $(shell find src -type f)
+SRC_NOMAIN = $(filter-out $(BIN:%=src/%.cpp),$(SRC))
 OBJ = $(SRC:src/%=bin/%.o)
+OBJ_NOMAIN = $(SRC_NOMAIN:src/%=bin/%.o)
 
-DEP = $(OBJ:bin/%.o=bin/%.d)
+DEP = $(SRC:src/%=bin/%.d)
 
-all:: $(BINDIR) $(BIN)
+all:: $(BINDIR) $(BIN_PATH)
 
-$(BIN): $(OBJ)
+$(BIN_PATH): bin/%: bin/%.cpp.o $(OBJ_NOMAIN)
 	$(LD) -o $@ $^ $(LDFLAGS)
 
 bin/%.c.o: src/%.c
 	$(CC) $(CPPFLAGS) -c -o $@ $< $(CFLAGS)
 
 bin/%.cpp.o: src/%.cpp
-	$(CC) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS)
+	$(CXX) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS)
 
 run:: all
 	$(BIN)
