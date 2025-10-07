@@ -12,7 +12,7 @@ CXX = g++
 LD = g++
 RM = rm
 
-BIN = main client server
+BIN = test client server
 BIN_PATH = $(BIN:%=bin/%)
 
 HDR = $(shell find inc -type f)
