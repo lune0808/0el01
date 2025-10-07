@@ -56,84 +56,17 @@ public:
 	}
 
 	//! finds a media object from its name, returns nullptr if the object is not found
-	managed_t find_media(std::string const &name)
-	{
-		auto position = media.find(name);
-		if (position != media.end()) {
-			return position->second;
-		} else {
-			return nullptr;
-		}
-	}
-
+	managed_t find_media(std::string const &name);
 	//! finds a group object from its name, returns nullptr if the object is not found
-	group *find_group(std::string const &name)
-	{
-		auto position = groups.find(name);
-		if (position != groups.end()) {
-			return &position->second;
-		} else {
-			return nullptr;
-		}
-	}
-
+	group *find_group(std::string const &name);
 	//! prints a human-readable representation of the media/group called 'name' or an error if absent
-	void display(std::string const &name, std::ostream &os)
-	{
-		if (auto obj = find_media(name); obj) {
-			obj->display(os);
-		} else if (auto obj = find_group(name); obj) {
-			obj->display(os);
-		} else {
-			os << "(\"" << name << "\" not found)";
-		}
-	}
-
+	void display(std::string const &name, std::ostream &os);
 	//! plays the media object called 'name' and returns `true` if it exists else `false`
-	bool play(std::string const &name)
-	{
-		auto obj = find_media(name);
-		if (obj) {
-			obj->play();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	bool play(std::string const &name);
 	//! removes a media or group and updates its references
-	bool remove(std::string const &name)
-	{
-		if (auto position = media.find(name); position != media.end()) {
-			media.erase(position);
-			for (auto &[_, gp] : groups) {
-				gp.remove(position->second);
-			}
-			return true;
-		} else if (auto position = groups.find(name); position != groups.end()) {
-			groups.erase(position);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	bool remove(std::string const &name);
 	//! finds all media/groups whose name matches `prefix`
-	std::vector<std::string> prefixed(std::string const &prefix) const
-	{
-		std::vector<std::string> result;
-		for (const auto &[name, _] : media) {
-			if (name.starts_with(prefix)) {
-				result.push_back(name);
-			}
-		}
-		for (const auto &[name, _] : groups) {
-			if (name.starts_with(prefix)) {
-				result.push_back(name);
-			}
-		}
-		return result;
-	}
+	std::vector<std::string> prefixed(std::string const &prefix) const;
 
 	//! returns all objects matching the requested type
 	template <typename T> std::vector<std::string> type() const
@@ -149,16 +82,7 @@ public:
 		return result;
 	}
 
-	std::vector<std::string> all() const
-	{
-		std::vector<std::string> result;
-		for (const auto &[name, _] : media) {
-			result.push_back(name);
-		}
-		for (const auto &[name, _] : groups) {
-			result.push_back(name);
-		}
-		return result;
-	}
+	//! returns all objects in the database
+	std::vector<std::string> all() const;
 };
 
