@@ -50,12 +50,20 @@ managed_t multimedia::deserialize(std::istream &is, std::map<std::string, manage
 	using namespace std::string_literals;
 	char type;
 	is >> type;
+	char paren = '('^1;
 	// parse name(path)
 	std::string name;
+	// loop because spaces are allowed in names
 	bool first_segment = true;
-	char paren;
-	while (!(is >> paren) || paren != '(') {
-		is.unget();
+	for (;;) {
+		if (is >> paren) {
+			is.unget();
+			if (paren == '(') {
+				break;
+			}
+		} else if (!is.good() || is.eof()) {
+			return nullptr;
+		}
 		if (first_segment) {
 			first_segment = false;
 		} else {
@@ -65,10 +73,18 @@ managed_t multimedia::deserialize(std::istream &is, std::map<std::string, manage
 		is >> name_segment;
 		name += name_segment;
 	}
+	is >> paren; // paren = '(' guaranteed
 	std::string path;
 	is >> path;
+	for (char c : path) {
+		if (!allowed_char(c) && c != '/') {
+			return nullptr;
+		}
+	}
 	is >> paren;
-	// paren == )
+	if (paren != ')') {
+		return nullptr;
+	}
 	switch (type) {
 	case 'P':
 		return photo::deserialize(is, seen, std::move(name), std::move(path));

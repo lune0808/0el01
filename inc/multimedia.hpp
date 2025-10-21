@@ -4,7 +4,23 @@
 #include <map>
 #include <iostream>
 #include <memory>
+#include <string_view>
 
+
+static inline bool allowed_char(char c)
+{
+	return isalnum(c) || c == ' ' || c == '.' || c == '_' || c == '-' || c == '~';
+}
+
+static inline bool allowed_name(std::string_view name)
+{
+	for (char c : name) {
+		if (!allowed_char(c)) {
+			return false;
+		}
+	}
+	return true;
+}
 
 /**
   \brief base class for multimedia objects

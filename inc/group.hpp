@@ -9,11 +9,6 @@
 // so we use it in the serialized format as a sentinel
 #define GROUP_SYMBOL '/'
 
-static inline bool allowed_char(char c)
-{
-	return isalnum(c) || c == ' ' || c == '.' || c == '_' || c == '-' || c == '~';
-}
-
 /**
   \brief a group of multimedia objects
 
@@ -72,10 +67,8 @@ public:
 
 		std::string name;
 		is >> name;
-		for (char c : name) {
-			if (!allowed_char(c)) {
-				return std::nullopt;
-			}
+		if (!allowed_name(name)) {
+			return std::nullopt;
 		}
 
 		group g(std::move(name));
