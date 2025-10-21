@@ -52,5 +52,29 @@ public:
 		std::string command = "imagej "s + get_path() + " &"s;
 		system(command.c_str());
 	}
+	//! returns a string representation of the object
+	void serialize(std::ostream &os) const override
+	{
+		os << "P ";
+		multimedia::serialize(os);
+		os << ' ' << width << ' ' << height;
+	}
+	//! creates an object matching the string representation given
+	static managed_t deserialize(std::istream &is, std::map<std::string, managed_t> &seen, std::string &&name, std::string &&path)
+	{
+		size_t width;
+		size_t height;
+		is >> width >> height;
+		const auto it = seen.find(name);
+		if (it != seen.end()) {
+			return it->second;
+		} else {
+			std::string cname{name};
+			return seen.insert({
+				std::move(cname),
+				std::shared_ptr<photo>{new photo{std::move(name), std::move(path), width, height}}
+			}).first->second;
+		}
+	}
 };
 

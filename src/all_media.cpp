@@ -86,3 +86,36 @@ std::vector<std::string> all_media::all() const
 	}
 	return result;
 }
+
+void all_media::serialize(std::ostream &os) const
+{
+	for (const auto &[_, obj] : media) {
+		obj->serialize(os);
+		os << '\n';
+	}
+	for (const auto &[_, obj] : groups) {
+		obj.serialize(os);
+		os << '\n';
+	}
+}
+
+all_media all_media::deserialize(std::istream &is)
+{
+	std::map<std::string, managed_t> seen;
+	char G;
+	while (!(is >> G) || G != 'G') {
+		is.unget();
+		multimedia::deserialize(is, seen);
+	}
+	is.unget();
+	std::map<std::string, group> groups;
+	while (is.good()) {
+		group g = group::deserialize(is, seen);
+		std::string cname = g.get_name();
+		groups.insert({std::move(cname), std::move(g)});
+	}
+	all_media database;
+	database.media = std::move(seen);
+	database.groups = std::move(groups);
+	return database;
+}

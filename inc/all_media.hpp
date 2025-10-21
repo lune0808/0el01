@@ -84,5 +84,9 @@ public:
 
 	//! returns all objects in the database
 	std::vector<std::string> all() const;
+	//! returns a string representation of the database
+	void serialize(std::ostream &os) const;
+	//! builds a database from a string representation
+	static all_media deserialize(std::istream &is);
 };
 

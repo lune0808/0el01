@@ -2,6 +2,7 @@
 
 #include "video.hpp"
 #include <span>
+#include <vector>
 
 
 /**
@@ -42,5 +43,38 @@ public:
 
 	//! displays the underlying object as text
 	void display(std::ostream &os) const;
+	//! returns a string representation of the object
+	void serialize(std::ostream &os) const override
+	{
+		os << "M ";
+		multimedia::serialize(os);
+		os << ' ' << nchapters << ' ';
+		for (size_t chap = 0; chap < nchapters; ++chap) {
+			os << ' ' << chapters[chap];
+		}
+	}
+	//! creates an object matching the string representation given
+	static managed_t deserialize(std::istream &is, std::map<std::string, managed_t> &seen, std::string &&name, std::string &&path)
+	{
+		std::vector<size_t> chapters;
+		size_t nchap;
+		is >> nchap;
+		for (size_t ichap = 0; ichap < nchap; ++ichap) {
+			size_t duration;
+			is >> duration;
+			chapters.push_back(duration);
+		}
+		const auto it = seen.find(name);
+		if (it != seen.end()) {
+			return it->second;
+		} else {
+			std::string cname{name};
+			std::span<size_t> chapters_span{chapters.begin(), chapters.size()};
+			return seen.insert({
+				std::move(cname),
+				std::shared_ptr<movie>{new movie{std::move(name), std::move(path), chapters_span}}
+			}).first->second;
+		}
+	}
 };
 

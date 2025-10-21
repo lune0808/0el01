@@ -45,6 +45,29 @@ public:
 		std::string command = "mpv "s + get_path() + " &"s;
 		system(command.c_str());
 	}
+	//! returns a string representation of the object
+	void serialize(std::ostream &os) const override
+	{
+		os << "V ";
+		multimedia::serialize(os);
+		os << ' ' << duration;
+	}
+	//! creates an object matching the string representation given
+	static managed_t deserialize(std::istream &is, std::map<std::string, managed_t> &seen, std::string &&name, std::string &&path)
+	{
+		size_t duration;
+		is >> duration;
+		const auto it = seen.find(name);
+		if (it != seen.end()) {
+			return it->second;
+		} else {
+			std::string cname{name};
+			return seen.insert({
+				std::move(cname),
+				std::shared_ptr<video>{new video{std::move(name), std::move(path), duration}}
+			}).first->second;
+		}
+	}
 };
 
 

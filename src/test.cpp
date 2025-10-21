@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "multimedia.hpp"
 #include "photo.hpp"
@@ -98,7 +99,7 @@ void test_all_media()
 	std::cout << "\n";
 	media.display("nyyan cat"s, std::cout);
 	std::cout << "\n";
-	media.play("rango"s);
+	// media.play("rango"s); // annoying without a backing file
 	std::cout << "\n";
 }
 
@@ -116,6 +117,25 @@ void test_remove()
 	std::cout << "\n";
 }
 
+void test_serial()
+{
+	all_media media;
+	media.create_media<photo>("pig"s, "pig.jpg"s, 1280lu, 720lu);
+	media.create_media<video>("nyan cat"s, "nyan_cat.mp4"s, 180lu);
+	media.create_media<movie>("rango"s, "rango_movie_blabla.mkv"s, movie::chapters_t{{600lu, 700lu, 550lu, 810lu, 300lu, 920lu, 470lu}});
+	media.create_group("MyMovies"s, "rango"s, "nyan cat"s);
+	media.display("MyMovies"s, std::cout);
+
+	std::stringstream ss;
+	media.serialize(ss);
+	std::cout << "\nserial:\n" << ss.str();
+
+	auto ds = all_media::deserialize(ss);
+	std::stringstream ss2;
+	ds.serialize(ss2);
+	std::cout << "deserialized:\n" << ss2.str() << '\n';
+}
+
 int main()
 {
 	test_base_inst();
@@ -124,5 +144,6 @@ int main()
 	test_group();
 	test_all_media();
 	test_remove();
+	test_serial();
 }
 

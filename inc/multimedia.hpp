@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <iostream>
 #include <memory>
 
@@ -35,10 +36,16 @@ public:
 	virtual void display(std::ostream &os) const;
 	//! displays the underlying object using the appropriate program
 	virtual void play() const = 0;
+	//! returns a string representation of the object
+	virtual void serialize(std::ostream &os) const = 0;
+
+	using managed_t = std::shared_ptr<multimedia>;
+	//! creates an object matching the string representation given
+	static managed_t deserialize(std::istream &is, std::map<std::string, managed_t> &seen);
 };
 
 /**
   any multimedia object with automatic memory management
  */
-using managed_t = std::shared_ptr<multimedia>;
+using managed_t = multimedia::managed_t;
 
