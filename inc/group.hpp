@@ -2,8 +2,17 @@
 
 #include <map>
 #include <list>
+#include <optional>
 #include "multimedia.hpp"
 
+// this symbol can never be in a file name
+// so we use it in the serialized format as a sentinel
+#define GROUP_SYMBOL '/'
+
+static inline bool allowed_char(char c)
+{
+	return isalnum(c) || c == ' ' || c == '.' || c == '_' || c == '-' || c == '~';
+}
 
 /**
   \brief a group of multimedia objects
@@ -46,25 +55,34 @@ public:
 	//! returns a string representation of the object
 	void serialize(std::ostream &os) const
 	{
-		os << "G " << name << "\n";
+		os << GROUP_SYMBOL << ' ' << name << "\n";
 		for (const auto &el : *this) {
 			os << '\t' << el->get_name() << '\n';
 		}
 		os << '\n';
 	}
 	//! creates an object matching the string representation given
-	static group deserialize(std::istream &is, std::map<std::string, managed_t> &seen)
+	static std::optional<group> deserialize(std::istream &is, std::map<std::string, managed_t> &seen)
 	{
-		char G;
-		is >> G; // G == 'G'
+		char G = GROUP_SYMBOL^1; // anything different from GROUP_SYMBOL
+		is >> G; // G == GROUP_SYMBOL
+		if (G != GROUP_SYMBOL) {
+			return std::nullopt;
+		}
+
 		std::string name;
 		is >> name;
+		for (char c : name) {
+			if (!allowed_char(c)) {
+				return std::nullopt;
+			}
+		}
+
 		group g(std::move(name));
 		for (;;) {
 			if (is >> G) {
 				is.unget();
-				// TODO: media cannot be called just 'G'
-				if (G == 'G') {
+				if (G == GROUP_SYMBOL) {
 					break;
 				}
 			} else if (!is.good() || is.eof()) {
@@ -73,8 +91,10 @@ public:
 			std::string name;
 			std::getline(is, name);
 			const auto it = seen.find(name);
-			// TODO: it != seen.end() ?
-			g.push_back(it->second);
+			// ignores unknown names
+			if (it != seen.end()) {
+				g.push_back(it->second);
+			}
 		}
 		return g;
 	}

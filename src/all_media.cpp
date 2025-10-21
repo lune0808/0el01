@@ -1,4 +1,5 @@
 #include "all_media.hpp"
+#include "group.hpp"
 
 
 managed_t all_media::find_media(std::string const &name)
@@ -103,16 +104,19 @@ all_media all_media::deserialize(std::istream &is)
 {
 	std::map<std::string, managed_t> seen;
 	char G;
-	while (!(is >> G) || G != 'G') {
+	while (!(is >> G) || G != GROUP_SYMBOL) {
 		is.unget();
 		multimedia::deserialize(is, seen);
 	}
 	is.unget();
 	std::map<std::string, group> groups;
-	while (is.good()) {
-		group g = group::deserialize(is, seen);
-		std::string cname = g.get_name();
-		groups.insert({std::move(cname), std::move(g)});
+	while (is.good() && !is.eof()) {
+		if (auto g = group::deserialize(is, seen); g.has_value()) {
+			std::string cname = g->get_name();
+			groups.insert({std::move(cname), std::move(*g)});
+		} else {
+			break;
+		}
 	}
 	all_media database;
 	database.media = std::move(seen);
