@@ -1,8 +1,8 @@
-DIR = $(shell find inc -type d)
-BINDIR = $(DIR:inc%=bin%)
+DIR = $(shell find src/include -type d)
+BINDIR = $(DIR:src/include%=bin%)
 LIBS = pthread
 SAN =
-CPPFLAGS = -MMD -MP -Ibin -Iinc $(SAN)
+CPPFLAGS = -MMD -MP -Ibin -Isrc/include $(SAN)
 CFLAGS = $(SAN)
 CXXFLAGS = -std=c++20 -ggdb3 $(SAN)
 LDFLAGS = $(SAN) $(addprefix -L,$(LIBS))
@@ -15,9 +15,9 @@ RM = rm
 BIN = test client server
 BIN_PATH = $(BIN:%=bin/%)
 
-HDR = $(shell find inc -type f)
+HDR = $(shell find src/include -type f)
 
-SRC = $(shell find src -type f)
+SRC = $(shell find src -type f -name "*.cpp")
 SRC_NOMAIN = $(filter-out $(BIN:%=src/%.cpp),$(SRC))
 OBJ = $(SRC:src/%=bin/%.o)
 OBJ_NOMAIN = $(SRC_NOMAIN:src/%=bin/%.o)

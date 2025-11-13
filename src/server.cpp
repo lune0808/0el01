@@ -4,7 +4,6 @@
 //  Eric Lecolinet - Telecom ParisTech - 2016.
 //
 
-#include <memory>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -96,6 +95,28 @@ static std::string cmd_remove(std::istream &is)
 	return ok ? "Y"s : "N"s;
 }
 
+static std::string cmd_help(std::istream &is)
+{
+	const std::map<std::string, std::string> message{
+		{ "find"s, "usage: find <name> (returns text representation of corresponding object)"s },
+		{ "play"s, "usage: play <name> (returns Y if the object was played successfully, N on failure)"s },
+		{ "prefixed"s, "usage: prefixed <pattern> (returns a list of prefix matches)"s },
+		{ "type"s, "usage: type <inital> (returns all files with the type corresponding to initial: P for Photo, V for Video, M for Movie, G for Group)"s },
+		{ "all"s, "usage: all (returns the entire database)"s },
+		{ "remove"s, "usage: remove <name> (removes an object from the database, returns Y/N depending on success)"s },
+	};
+	std::string name;
+	is >> name;
+	const auto it = message.find(name);
+	std::string response;
+	if (it != message.end()) {
+		response = it->second;
+	} else {
+		response = "unknown command request. available commands are: find, play, prefixed, type, all, remove."s;
+	}
+	return response;
+}
+
 static bool server_main(std::string const &request, std::string &response)
 {
 	using command_t = std::string(*)(std::istream&);
@@ -106,6 +127,7 @@ static bool server_main(std::string const &request, std::string &response)
 		{ "type"s, cmd_type },
 		{ "all"s, cmd_all },
 		{ "remove"s, cmd_remove },
+		{ "help"s, cmd_help },
 	};
 	std::stringstream input(request);
 	std::string command;
@@ -114,7 +136,7 @@ static bool server_main(std::string const &request, std::string &response)
 	if (it != execute.end()) {
 		response = it->second(input);
 	} else {
-		response = "<unknown command>";
+		response = "unknown command. ask help for more details"s;
 	}
 	return true;
 }
