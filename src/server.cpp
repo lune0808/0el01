@@ -104,6 +104,7 @@ static std::string cmd_help(std::istream &is)
 		{ "type"s, "usage: type <inital> (returns all files with the type corresponding to initial: P for Photo, V for Video, M for Movie, G for Group)"s },
 		{ "all"s, "usage: all (returns the entire database)"s },
 		{ "remove"s, "usage: remove <name> (removes an object from the database, returns Y/N depending on success)"s },
+		{ "quit"s, "usage: quit (disconnects from the server)"s },
 	};
 	std::string name;
 	is >> name;
@@ -112,7 +113,7 @@ static std::string cmd_help(std::istream &is)
 	if (it != message.end()) {
 		response = it->second;
 	} else {
-		response = "unknown command request. available commands are: find, play, prefixed, type, all, remove."s;
+		response = "unknown command request. available commands are: find, play, prefixed, type, all, remove, quit."s;
 	}
 	return response;
 }

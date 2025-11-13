@@ -25,9 +25,6 @@ public class SetTopBox extends JFrame {
 	JTextArea text;
 	JScrollPane textScroll;
 	JMenuBar menuBar;
-	Action firstAction;
-	Action quitAction;
-	Action thirdAction;
 
 	/**
 	 * Entry point of the program
@@ -45,9 +42,9 @@ public class SetTopBox extends JFrame {
 		text = new JTextArea(40, 80);
 		textScroll = new JScrollPane(text);
 		menuBar = new JMenuBar();
-		firstAction = new FirstAction();
-		quitAction = new QuitAction();
-		thirdAction = new ThirdAction();
+		Action firstAction = new FirstAction();
+		Action quitAction = new QuitAction();
+		Action thirdAction = new ThirdAction();
 		
 		JButton firstButton = new JButton(firstAction);
 		JButton quitButton = new JButton(quitAction);
