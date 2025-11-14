@@ -73,6 +73,24 @@ public class SetTopBox extends JFrame {
 		buttonsPanel.add(new JButton(play));
 		buttonsPanel.add(new JButton(delete));
 		
+		outputMenuBar = new JMenuBar();
+		JMenu outputNameField = new JMenu("Name");
+		JMenu outputTypeField = new JMenu("Type");
+		JMenu outputTypeSelector = new JMenu("v"); // TODO: should be an arrow icon
+		outputTypeSelector.add(new JMenuItem("All"));
+		outputTypeSelector.add(new JMenuItem("Photo(s)"));
+		outputTypeSelector.add(new JMenuItem("Video(s)"));
+		outputTypeSelector.add(new JMenuItem("Movie(s)"));
+		outputTypeSelector.add(new JMenuItem("Group(s)"));
+		JMenu outputDetailsField = new JMenu("Details...");
+		searchBar = new JTextField(32); // TODO: should show 'Search...' 
+		outputMenuBar.add(outputNameField);
+		outputMenuBar.add(outputTypeField);
+		outputMenuBar.add(outputTypeSelector);
+		outputMenuBar.add(outputDetailsField);
+		outputMenuBar.add(searchBar);
+		outputPanel.add(outputMenuBar, BorderLayout.NORTH);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
 		pack();
@@ -80,7 +98,7 @@ public class SetTopBox extends JFrame {
 	}
 	
 	/**
-	 * Out-of-line definition for the first action
+	 * Out-of-line definition for the quit action
 	 */
 	private class QuitAction extends AbstractAction {
 
@@ -98,7 +116,7 @@ public class SetTopBox extends JFrame {
 	}
 	
 	/**
-	 * Out-of-line definition for the first action
+	 * Out-of-line definition for the play action
 	 */
 	private class PlayAction extends AbstractAction {
 
@@ -115,7 +133,7 @@ public class SetTopBox extends JFrame {
 	}
 	
 	/**
-	 * Out-of-line definition for the third action
+	 * Out-of-line definition for the delete action
 	 */
 	private class DeleteAction extends AbstractAction {
 
