@@ -59,11 +59,19 @@ public class SetTopBox extends JFrame {
 		add(outputPanel, BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.SOUTH);
 		
+		Action quit = new QuitAction();
+		Action play = new PlayAction();
+		Action delete = new DeleteAction();
+		
 		JMenu topMenu = new JMenu("Menu");
-		topMenu.add(new QuitAction());
-		topMenu.add(new PlayAction());
-		topMenu.add(new DeleteAction());
+		topMenu.add(quit);
+		topMenu.add(play);
+		topMenu.add(delete);
 		topMenuBar.add(topMenu);
+		
+		buttonsPanel.add(new JButton(quit));
+		buttonsPanel.add(new JButton(play));
+		buttonsPanel.add(new JButton(delete));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
@@ -84,7 +92,7 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// text.append("First button pressed.");
+			System.exit(0);
 		}
 		
 	}
@@ -102,7 +110,6 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
 		}
 		
 	}
@@ -120,7 +127,6 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// text.append("Third button pressed.");
 		}
 		
 	}
