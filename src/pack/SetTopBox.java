@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 /**
  * @brief the main class of the SetTopBox package
@@ -26,10 +29,13 @@ import javax.swing.JTextField;
 public class SetTopBox extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
-	JTextArea outputNames;
-	JTextArea outputTypes;
-	JTextArea outputDetails;
+
+	JPanel outputNames;
+	JPanel outputTypes;
+	JPanel outputDetails;
+	JTextArea outputNamesContent;
+	JTextArea outputTypesContent;
+	JTextArea outputDetailsContent;
 	JButton quitButton;
 	JButton playButton;
 	JButton deleteButton;
@@ -60,7 +66,7 @@ public class SetTopBox extends JFrame {
 	 * Spawns a window with UI
 	 */
 	private SetTopBox() {
-		outputContainerPanel = new JPanel(new BorderLayout());
+		outputContainerPanel = new JPanel(new FlowLayout());
 		topMenuBar = new JMenuBar();
 		buttonsPanel = new JPanel(new FlowLayout());
 		add(topMenuBar, BorderLayout.NORTH);
@@ -82,30 +88,44 @@ public class SetTopBox extends JFrame {
 		buttonsPanel.add(new JButton(delete));
 		
 		outputMenuBar = new JMenuBar();
-		JMenu outputNameField = new JMenu("Name");
-		JMenu outputTypeField = new JMenu("Type");
+		searchBar = new JTextField(SEARCH_COLUMNS); // TODO: should show 'Search...'
+		outputMenuBar.add(searchBar);
+		outputContainerPanel.add(outputMenuBar, BorderLayout.NORTH);
+
+		outputPanel = new JPanel(new FlowLayout());
+		SimpleAttributeSet fieldAttributes = new SimpleAttributeSet();
+		StyleConstants.setItalic(fieldAttributes, true);
+		outputNames = new JPanel(new BorderLayout());
+		JTextPane outputNameField = new JTextPane();
+		outputNameField.setCharacterAttributes(fieldAttributes, false);
+		outputNameField.setText("Name");
+		outputNames.add(outputNameField, BorderLayout.NORTH);
+		outputNamesContent = textArea(OUTPUT_ROWS, NAME_COLUMNS);
+		outputNames.add(new JScrollPane(outputNamesContent), BorderLayout.CENTER);
+		outputPanel.add(outputNames);
+		JTextPane outputTypeField = new JTextPane();
+		outputTypeField.setCharacterAttributes(fieldAttributes, false);
+		outputTypeField.setText("Type");
+		// TODO: show these menus
 		JMenu outputTypeSelector = new JMenu("v"); // TODO: should be an arrow icon
 		outputTypeSelector.add(new JMenuItem("All"));
 		outputTypeSelector.add(new JMenuItem("Photo(s)"));
 		outputTypeSelector.add(new JMenuItem("Video(s)"));
 		outputTypeSelector.add(new JMenuItem("Movie(s)"));
 		outputTypeSelector.add(new JMenuItem("Group(s)"));
-		JMenu outputDetailsField = new JMenu("Details...");
-		searchBar = new JTextField(SEARCH_COLUMNS); // TODO: should show 'Search...' 
-		outputMenuBar.add(outputNameField);
-		outputMenuBar.add(outputTypeField);
-		outputMenuBar.add(outputTypeSelector);
-		outputMenuBar.add(outputDetailsField);
-		outputMenuBar.add(searchBar);
-		outputContainerPanel.add(outputMenuBar, BorderLayout.NORTH);
-		
-		outputPanel = new JPanel();
-		outputNames = textArea(OUTPUT_ROWS, NAME_COLUMNS);
-		outputPanel.add(new JScrollPane(outputNames));
-		outputTypes = textArea(OUTPUT_ROWS, TYPE_COLUMNS);
+		outputTypesContent = textArea(OUTPUT_ROWS, TYPE_COLUMNS);
+		outputTypes = new JPanel(new BorderLayout());
+		outputTypes.add(outputTypeField, BorderLayout.NORTH);
+		outputTypes.add(outputTypesContent, BorderLayout.CENTER);
 		outputPanel.add(outputTypes);
-		outputDetails = textArea(OUTPUT_ROWS, DETAIL_COLUMNS);
-		outputPanel.add(outputDetails);
+		JTextPane outputDetailsField = new JTextPane();
+		outputDetailsField.setCharacterAttributes(fieldAttributes, false);
+		outputDetailsField.setText("Details...");
+		outputDetails = new JPanel(new BorderLayout());
+		outputDetails.add(outputDetailsField, BorderLayout.NORTH);
+		outputDetailsContent = textArea(OUTPUT_ROWS, DETAIL_COLUMNS);
+		outputDetails.add(new JScrollPane(outputDetailsContent), BorderLayout.CENTER);
+		outputPanel.add(new JScrollPane(outputDetails));
 		outputContainerPanel.add(outputPanel, BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
