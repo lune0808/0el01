@@ -46,6 +46,7 @@ public class SetTopBox extends JFrame {
 	JMenuBar topMenuBar;
 	JMenuBar outputMenuBar;
 	Client client;
+	String serverResponse;
 	
 	private static final int SEARCH_COLUMNS = 32;
 	private static final int OUTPUT_ROWS = 32;
@@ -66,6 +67,13 @@ public class SetTopBox extends JFrame {
 	 * Spawns a window with UI
 	 */
 	private SetTopBox() {
+		try {
+			client = new Client("localhost", 3331);
+			serverResponse = client.send("all\n");
+		} catch (IOException e) {
+			System.exit(ABORT);
+		}
+		
 		outputContainerPanel = new JPanel(new FlowLayout());
 		topMenuBar = new JMenuBar();
 		buttonsPanel = new JPanel(new FlowLayout());
@@ -128,6 +136,9 @@ public class SetTopBox extends JFrame {
 		outputPanel.add(new JScrollPane(outputDetails));
 		outputContainerPanel.add(outputPanel, BorderLayout.CENTER);
 		
+		outputNamesContent.setText(serverResponse);
+		searchBar.addActionListener(new SearchAction());
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
 		pack();
@@ -188,6 +199,26 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+		}
+		
+	}
+	
+	/**
+	 * Out-of-line definition for the search action
+	 */
+	private class SearchAction extends AbstractAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchAction() {
+			super("Search");
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String request = e.getActionCommand();
+			serverResponse = client.send(request);
+			outputNamesContent.setText(serverResponse);
 		}
 		
 	}
