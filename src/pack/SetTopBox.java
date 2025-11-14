@@ -27,17 +27,25 @@ public class SetTopBox extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	JTextArea output;
-	JScrollPane outputScroll;
+	JTextArea outputNames;
+	JTextArea outputTypes;
+	JTextArea outputDetails;
 	JButton quitButton;
 	JButton playButton;
 	JButton deleteButton;
+	JPanel outputContainerPanel;
 	JPanel outputPanel;
 	JPanel buttonsPanel;
 	JTextField searchBar;
 	JMenuBar topMenuBar;
 	JMenuBar outputMenuBar;
 	Client client;
+	
+	private static final int SEARCH_COLUMNS = 32;
+	private static final int OUTPUT_ROWS = 32;
+	private static final int NAME_COLUMNS = 32;
+	private static final int TYPE_COLUMNS = 8;
+	private static final int DETAIL_COLUMNS = 48;
 
 	/**
 	 * Entry point of the program
@@ -52,11 +60,11 @@ public class SetTopBox extends JFrame {
 	 * Spawns a window with UI
 	 */
 	private SetTopBox() {
-		outputPanel = new JPanel(new BorderLayout());
+		outputContainerPanel = new JPanel(new BorderLayout());
 		topMenuBar = new JMenuBar();
 		buttonsPanel = new JPanel(new FlowLayout());
 		add(topMenuBar, BorderLayout.NORTH);
-		add(outputPanel, BorderLayout.CENTER);
+		add(outputContainerPanel, BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.SOUTH);
 		
 		Action quit = new QuitAction();
@@ -83,18 +91,33 @@ public class SetTopBox extends JFrame {
 		outputTypeSelector.add(new JMenuItem("Movie(s)"));
 		outputTypeSelector.add(new JMenuItem("Group(s)"));
 		JMenu outputDetailsField = new JMenu("Details...");
-		searchBar = new JTextField(32); // TODO: should show 'Search...' 
+		searchBar = new JTextField(SEARCH_COLUMNS); // TODO: should show 'Search...' 
 		outputMenuBar.add(outputNameField);
 		outputMenuBar.add(outputTypeField);
 		outputMenuBar.add(outputTypeSelector);
 		outputMenuBar.add(outputDetailsField);
 		outputMenuBar.add(searchBar);
-		outputPanel.add(outputMenuBar, BorderLayout.NORTH);
+		outputContainerPanel.add(outputMenuBar, BorderLayout.NORTH);
+		
+		outputPanel = new JPanel();
+		outputNames = textArea(OUTPUT_ROWS, NAME_COLUMNS);
+		outputPanel.add(new JScrollPane(outputNames));
+		outputTypes = textArea(OUTPUT_ROWS, TYPE_COLUMNS);
+		outputPanel.add(outputTypes);
+		outputDetails = textArea(OUTPUT_ROWS, DETAIL_COLUMNS);
+		outputPanel.add(outputDetails);
+		outputContainerPanel.add(outputPanel, BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
 		pack();
 		setVisible(true);
+	}
+	
+	private JTextArea textArea(int rows, int columns) {
+		JTextArea result = new JTextArea(rows, columns);
+		result.setEditable(false);
+		return result;
 	}
 	
 	/**
