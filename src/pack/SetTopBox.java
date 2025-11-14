@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -69,7 +70,7 @@ public class SetTopBox extends JFrame {
 	private SetTopBox() {
 		try {
 			client = new Client("localhost", 3331);
-			serverResponse = client.send("all\n");
+			serverResponse = client.send("all ");
 		} catch (IOException e) {
 			System.exit(ABORT);
 		}
@@ -107,6 +108,7 @@ public class SetTopBox extends JFrame {
 		JTextPane outputNameField = new JTextPane();
 		outputNameField.setCharacterAttributes(fieldAttributes, false);
 		outputNameField.setText("Name");
+		outputNameField.setEditable(false);
 		outputNames.add(outputNameField, BorderLayout.NORTH);
 		outputNamesContent = textArea(OUTPUT_ROWS, NAME_COLUMNS);
 		outputNames.add(new JScrollPane(outputNamesContent), BorderLayout.CENTER);
@@ -114,6 +116,7 @@ public class SetTopBox extends JFrame {
 		JTextPane outputTypeField = new JTextPane();
 		outputTypeField.setCharacterAttributes(fieldAttributes, false);
 		outputTypeField.setText("Type");
+		outputTypeField.setEditable(false);
 		// TODO: show these menus
 		JMenu outputTypeSelector = new JMenu("v"); // TODO: should be an arrow icon
 		outputTypeSelector.add(new JMenuItem("All"));
@@ -129,6 +132,7 @@ public class SetTopBox extends JFrame {
 		JTextPane outputDetailsField = new JTextPane();
 		outputDetailsField.setCharacterAttributes(fieldAttributes, false);
 		outputDetailsField.setText("Details...");
+		outputDetailsField.setEditable(false);
 		outputDetails = new JPanel(new BorderLayout());
 		outputDetails.add(outputDetailsField, BorderLayout.NORTH);
 		outputDetailsContent = textArea(OUTPUT_ROWS, DETAIL_COLUMNS);
@@ -143,6 +147,39 @@ public class SetTopBox extends JFrame {
 		setTitle("SetTopBox");
 		pack();
 		setVisible(true);
+	}
+	
+	private void parseResponseAll(String response) {
+		outputNamesContent.setText(response.replace(' ', '\n'));
+		outputTypesContent.setText("");
+		outputDetailsContent.setText("");
+	}
+	
+	private void parseResponsePlay(String response) {
+		// TODO: visual feedback
+		System.out.println(response.charAt(0) == 'Y'? "Success": "Failure");
+	}
+	
+	private void parseResponseRemove(String response) {
+		// TODO: visual feedback
+		System.out.println(response.charAt(0) == 'Y'? "Success": "Failure");
+	}
+	
+	private void parseResponsePrefixed(String response) {
+		parseResponseAll(response);
+	}
+	
+	private void parseResponseType(String response) {
+		parseResponseAll(response);
+	}
+	
+	private void parseResponseFind(String response) {
+		String[] words = response.split("[ ]");
+		if (words.length < 3)
+			return;
+		outputNamesContent.setText(words[0]);
+		outputTypesContent.setText(words[words.length - 1]);
+		outputDetailsContent.setText(String.join(" ", Arrays.copyOfRange(words, 1, words.length - 1)));
 	}
 	
 	private JTextArea textArea(int rows, int columns) {
@@ -218,7 +255,7 @@ public class SetTopBox extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String request = e.getActionCommand();
 			serverResponse = client.send(request);
-			outputNamesContent.setText(serverResponse);
+			parseResponseFind(serverResponse);
 		}
 		
 	}
