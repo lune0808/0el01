@@ -1,7 +1,10 @@
 package pack;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -9,8 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * @brief the main class of the SetTopBox package
@@ -22,9 +27,17 @@ public class SetTopBox extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	JTextArea text;
-	JScrollPane textScroll;
-	JMenuBar menuBar;
+	JTextArea output;
+	JScrollPane outputScroll;
+	JButton quitButton;
+	JButton playButton;
+	JButton deleteButton;
+	JPanel outputPanel;
+	JPanel buttonsPanel;
+	JTextField searchBar;
+	JMenuBar topMenuBar;
+	JMenuBar outputMenuBar;
+	Client client;
 
 	/**
 	 * Entry point of the program
@@ -39,52 +52,23 @@ public class SetTopBox extends JFrame {
 	 * Spawns a window with UI
 	 */
 	private SetTopBox() {
-		text = new JTextArea(40, 80);
-		textScroll = new JScrollPane(text);
-		menuBar = new JMenuBar();
-		Action firstAction = new FirstAction();
-		Action quitAction = new QuitAction();
-		Action thirdAction = new ThirdAction();
+		outputPanel = new JPanel(new BorderLayout());
+		topMenuBar = new JMenuBar();
+		buttonsPanel = new JPanel(new FlowLayout());
+		add(topMenuBar, BorderLayout.NORTH);
+		add(outputPanel, BorderLayout.CENTER);
+		add(buttonsPanel, BorderLayout.SOUTH);
 		
-		JButton firstButton = new JButton(firstAction);
-		JButton quitButton = new JButton(quitAction);
-		JButton thirdButton = new JButton(thirdAction);
-		JMenu menu = new JMenu("Menu");
-		menu.add(new JMenuItem(firstAction));
-		menu.add(new JMenuItem(quitAction));
-		menu.add(new JMenuItem(thirdAction));
-		
-		text.setLineWrap(true);
-		
-		add(textScroll, BorderLayout.CENTER);
-		add(firstButton, BorderLayout.WEST);
-		add(quitButton, BorderLayout.SOUTH);
-		add(thirdButton, BorderLayout.EAST);
-		menuBar.add(menu);
-		add(menuBar, BorderLayout.NORTH);
+		JMenu topMenu = new JMenu("Menu");
+		topMenu.add(new QuitAction());
+		topMenu.add(new PlayAction());
+		topMenu.add(new DeleteAction());
+		topMenuBar.add(topMenu);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
 		pack();
 		setVisible(true);
-	}
-	
-	/**
-	 * Out-of-line definition for the first action
-	 */
-	private class FirstAction extends AbstractAction {
-
-		private static final long serialVersionUID = 1L;
-
-		public FirstAction() {
-			super("First");
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			text.append("First button pressed.");
-		}
-		
 	}
 	
 	/**
@@ -100,6 +84,24 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// text.append("First button pressed.");
+		}
+		
+	}
+	
+	/**
+	 * Out-of-line definition for the first action
+	 */
+	private class PlayAction extends AbstractAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public PlayAction() {
+			super("Play");
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
 		}
 		
@@ -108,17 +110,17 @@ public class SetTopBox extends JFrame {
 	/**
 	 * Out-of-line definition for the third action
 	 */
-	private class ThirdAction extends AbstractAction {
+	private class DeleteAction extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
 
-		public ThirdAction() {
-			super("Third");
+		public DeleteAction() {
+			super("Delete");
 		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			text.append("Third button pressed.");
+			// text.append("Third button pressed.");
 		}
 		
 	}
