@@ -267,13 +267,17 @@ public class SetTopBox extends JFrame {
 			String request = "prefixed "+getRequestString();
 			System.out.println("Client: sent \""+request+"\"");
 			serverResponse = client.send(request);
-			resetTextContents();
-			String[] names = serverResponse.split("[ ]");
-			for (int i = 0; i < names.length; i++) {
-				request = "find "+names[i];
-				System.out.println("Client: sent \""+request+"\"");
-				serverResponse = client.send(request);
-				parseResponseFind(serverResponse);
+			if (serverResponse.length() == 0 || serverResponse.charAt(0) == '(') {
+				System.out.println("Not found.");
+			} else {
+				resetTextContents();
+				String[] names = serverResponse.split("[ ]");
+				for (int i = 0; i < names.length; i++) {
+					request = "find "+names[i];
+					System.out.println("Client: sent \""+request+"\"");
+					serverResponse = client.send(request);
+					parseResponseFind(serverResponse);
+				}
 			}
 		}
 		
