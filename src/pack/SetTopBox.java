@@ -84,16 +84,19 @@ public class SetTopBox extends JFrame {
 		Action quit = new QuitAction();
 		Action play = new PlayAction();
 		Action delete = new DeleteAction();
+		Action search = new SearchAction();
 		
 		JMenu topMenu = new JMenu("Menu");
 		topMenu.add(quit);
 		topMenu.add(play);
 		topMenu.add(delete);
+		topMenu.add(search);
 		topMenuBar.add(topMenu);
 		
 		buttonsPanel.add(new JButton(quit));
 		buttonsPanel.add(new JButton(play));
 		buttonsPanel.add(new JButton(delete));
+		buttonsPanel.add(new JButton(search));
 		
 		outputMenuBar = new JMenuBar();
 		searchBar = new JTextField(SEARCH_COLUMNS); // TODO: should show 'Search...'
