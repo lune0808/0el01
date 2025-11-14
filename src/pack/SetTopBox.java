@@ -70,7 +70,6 @@ public class SetTopBox extends JFrame {
 	private SetTopBox() {
 		try {
 			client = new Client("localhost", 3331);
-			serverResponse = client.send("all ");
 		} catch (IOException e) {
 			System.exit(ABORT);
 		}
@@ -117,13 +116,6 @@ public class SetTopBox extends JFrame {
 		outputTypeField.setCharacterAttributes(fieldAttributes, false);
 		outputTypeField.setText("Type");
 		outputTypeField.setEditable(false);
-		// TODO: show these menus
-		JMenu outputTypeSelector = new JMenu("v"); // TODO: should be an arrow icon
-		outputTypeSelector.add(new JMenuItem("All"));
-		outputTypeSelector.add(new JMenuItem("Photo(s)"));
-		outputTypeSelector.add(new JMenuItem("Video(s)"));
-		outputTypeSelector.add(new JMenuItem("Movie(s)"));
-		outputTypeSelector.add(new JMenuItem("Group(s)"));
 		outputTypesContent = textArea(OUTPUT_ROWS, TYPE_COLUMNS);
 		outputTypes = new JPanel(new BorderLayout());
 		outputTypes.add(outputTypeField, BorderLayout.NORTH);
@@ -143,16 +135,29 @@ public class SetTopBox extends JFrame {
 		outputNamesContent.setText(serverResponse);
 		searchBar.addActionListener(new SearchAction());
 		
+		serverResponse = client.send("all ");
+		parseResponseAll(serverResponse);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("SetTopBox");
 		pack();
 		setVisible(true);
 	}
 	
-	private void parseResponseAll(String response) {
-		outputNamesContent.setText(response.replace(' ', '\n'));
+	private JTextArea textArea(int rows, int columns) {
+		JTextArea result = new JTextArea(rows, columns);
+		result.setEditable(false);
+		return result;
+	}
+	
+	private void resetTextContents() {
+		outputNamesContent.setText("");
 		outputTypesContent.setText("");
 		outputDetailsContent.setText("");
+	}
+	
+	private void parseResponseAll(String response) {
+		outputNamesContent.append(response.replace(' ', '\n'));
 	}
 	
 	private void parseResponsePlay(String response) {
@@ -177,15 +182,13 @@ public class SetTopBox extends JFrame {
 		String[] words = response.split("[ ]");
 		if (words.length < 3)
 			return;
-		outputNamesContent.setText(words[0]);
-		outputTypesContent.setText(words[words.length - 1]);
-		outputDetailsContent.setText(String.join(" ", Arrays.copyOfRange(words, 1, words.length - 1)));
+		outputNamesContent.append(words[0]+'\n');
+		outputTypesContent.append(words[words.length - 1]+'\n');
+		outputDetailsContent.append(String.join(" ", Arrays.copyOfRange(words, 1, words.length - 1))+'\n');
 	}
 	
-	private JTextArea textArea(int rows, int columns) {
-		JTextArea result = new JTextArea(rows, columns);
-		result.setEditable(false);
-		return result;
+	private String getRequestString() {
+		return searchBar.getText();
 	}
 	
 	/**
@@ -219,6 +222,10 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String request = "play "+getRequestString();
+			System.out.println("Client: sent \""+request+"\"");
+			serverResponse = client.send(request);
+			parseResponsePlay(serverResponse);
 		}
 		
 	}
@@ -236,6 +243,10 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String request = "remove "+getRequestString();
+			System.out.println("Client: sent \""+request+"\"");
+			serverResponse = client.send(request);
+			parseResponseRemove(serverResponse);
 		}
 		
 	}
@@ -253,9 +264,17 @@ public class SetTopBox extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String request = e.getActionCommand();
+			String request = "prefixed "+getRequestString();
+			System.out.println("Client: sent \""+request+"\"");
 			serverResponse = client.send(request);
-			parseResponseFind(serverResponse);
+			resetTextContents();
+			String[] names = serverResponse.split("[ ]");
+			for (int i = 0; i < names.length; i++) {
+				request = "find "+names[i];
+				System.out.println("Client: sent \""+request+"\"");
+				serverResponse = client.send(request);
+				parseResponseFind(serverResponse);
+			}
 		}
 		
 	}
